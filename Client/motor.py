@@ -1,15 +1,6 @@
-# import curses
-import curses
 import RPi.GPIO as GPIO
 from time import sleep
 GPIO.setwarnings(False)
-
-# Get the curses window, turn off echoing of keyboard to screen, turn on
-# instant (no waiting) key response, and use special values for cursor keys
-screen = curses.initscr()
-curses.noecho()
-curses.cbreak()
-screen.keypad(True)
 
 class Motor:
     def __init__(self):
@@ -37,47 +28,47 @@ class Motor:
     def start(self):
         GPIO.output(self.STB,True)
 
-    def forward(self,s=50,t=0):
+    def forward(self,s=60,t=0,v=0):
         self.pwm.ChangeDutyCycle(s)
         self.pwm1.ChangeDutyCycle(s)
         GPIO.output(self.AIN1,False)
         GPIO.output(self.AIN2,True)
         GPIO.output(self.BIN1,False)
         GPIO.output(self.BIN2,True)
-        print('Forward')
         sleep(t)
+        if v==1: print('Forward')
     
-    def backward(self,s=50,t=0):
+    def backward(self,s=50,t=0,v=0):
         self.pwm.ChangeDutyCycle(s)
         self.pwm1.ChangeDutyCycle(s)
         GPIO.output(self.AIN1,True)
         GPIO.output(self.AIN2,False)
         GPIO.output(self.BIN1,True)
         GPIO.output(self.BIN2,False)
-        print('Backward')
         sleep(t)
+        if v==1: print('Backward')
     
-    def right(self,s1=50,s2=0,t=0):
+    def right(self,s1=50,s2=0,t=0,v=0):
         self.pwm.ChangeDutyCycle(s1)
         self.pwm1.ChangeDutyCycle(s2)
         GPIO.output(self.AIN1,False)
         GPIO.output(self.AIN2,True)
         GPIO.output(self.BIN1,False)
         GPIO.output(self.BIN2,True)
-        print("Right")
         sleep(t)
+        if v==1: print('Right')
 
-    def left(self,s1=0,s2=50,t=0):
+    def left(self,s1=0,s2=50,t=0,v=0):
         self.pwm.ChangeDutyCycle(s1)
         self.pwm1.ChangeDutyCycle(s2)
         GPIO.output(self.AIN1,False)
         GPIO.output(self.AIN2,True)
         GPIO.output(self.BIN1,False)
         GPIO.output(self.BIN2,True)
-        print("Left")
         sleep(t)
+        if v==1: print('Left')
 
-    def stop(self, t=0):
+    def stop(self, t=0,v=0):
         GPIO.output(self.STB,False)
         self.pwm.ChangeDutyCycle(0)
         self.pwm1.ChangeDutyCycle(0)
@@ -85,38 +76,25 @@ class Motor:
         GPIO.output(self.AIN2,False)
         GPIO.output(self.BIN1,False)
         GPIO.output(self.BIN2,False)
-        print("Stop")
         sleep(t)
+        if v==1: print('Stop')
     
-    def rotate_cw(self,s=50,time=0):
+    def rotate_cw(self,s=50,t=0,v=0):
         self.pwm.ChangeDutyCycle(s)
         self.pwm1.ChangeDutyCycle(s)
         GPIO.output(self.AIN1,False)
         GPIO.output(self.AIN2,True)
         GPIO.output(self.BIN1,True)
         GPIO.output(self.BIN2,False)
-        print('Rotate CW')
+        sleep(t)
+        if v==1: print('Rotate CW')
 
-    def rotate_ccw(self,s=50,time=0):
+    def rotate_ccw(self,s=50,t=0,v=0):
         self.pwm.ChangeDutyCycle(s)
         self.pwm1.ChangeDutyCycle(s)
         GPIO.output(self.AIN1,True)
         GPIO.output(self.AIN2,False)
         GPIO.output(self.BIN1,False)
         GPIO.output(self.BIN2,True)
-        print('Rotate CCW')
-
-if __name__ == '__main__':
-    try:
-        car = Motor()
-        car.backward(t=2)
-        car.stop()
-    except KeyboardInterrupt:
-        print('Car Stopped')
-    finally:
-        #Close down curses properly, inc turn echo back on!
-        curses.nocbreak(); screen.keypad(0); curses.echo()
-        curses.endwin()
-
-
-
+        sleep(t)
+        if v==1: print('Rotate CCW')
